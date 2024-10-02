@@ -89,8 +89,14 @@
 
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
 		<file>logs/lol.log</file>
-		<encoder>
-			<pattern>%msg%n</pattern>
+		<encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+			<providers>
+				<timestamp />
+				<loggerName />
+				<logLevel />
+				<message />
+				<mdc />
+			</providers>
 		</encoder>
 	</appender>
 

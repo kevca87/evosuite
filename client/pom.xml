@@ -87,6 +87,12 @@
             <artifactId>logback-classic</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- Json format logging -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>7.3</version>
+        </dependency>
         <dependency>
             <groupId>com.googlecode.gentyref</groupId>
             <artifactId>gentyref</artifactId>
