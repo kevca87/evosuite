@@ -87,6 +87,13 @@
 		</encoder>
 	</appender>
 
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>logs/lol.log</file>
+		<encoder>
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
+
 	<appender name="EVO_LOGGER_CLIENT" class="ch.qos.logback.classic.net.SocketAppender">
 		<remoteHost>${master_host:-localhost}</remoteHost>
 		<port>${master_log_port:-12345}</port>
@@ -121,7 +128,12 @@
 
 	<!-- main root logger. Note: it is turned OFF to avoid SUT using it-->
 
-	<root level="OFF">
+	<logger name="targets" level="TRACE">
+		<appender-ref ref="FILE" />
+	</logger>
+
+	<root level="trace">
+
 	</root>
 
 
