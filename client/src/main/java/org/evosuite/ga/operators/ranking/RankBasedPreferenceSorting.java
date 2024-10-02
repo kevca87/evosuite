@@ -40,6 +40,7 @@ import org.evosuite.ga.Chromosome;
 import org.evosuite.ga.FitnessFunction;
 import org.evosuite.ga.comparators.DominanceComparator;
 import org.evosuite.ga.comparators.PreferenceSortingComparator;
+import org.evosuite.utils.LoggingUtils;
 import org.evosuite.utils.Randomness;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,6 +134,8 @@ public class RankBasedPreferenceSorting<T extends Chromosome<T>> implements Rank
                 }
             }
             assert best != null;
+
+            LoggingUtils.getEvoLogger().info("\nBEST TEST\n" + best + "\nGOAL\n" + f);
 
             best.setRank(0);
             zero_front.add(best);
