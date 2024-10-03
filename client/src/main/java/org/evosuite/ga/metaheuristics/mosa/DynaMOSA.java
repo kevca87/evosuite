@@ -84,7 +84,7 @@ public class DynaMOSA extends AbstractMOSA {
         // Ranking the union using the best rank algorithm (modified version of the non dominated
         // sorting algorithm)
         MDC.put("currentGoals", this.goalsManager.getCurrentGoals().toString());
-        loggerTargets.trace("DynaMOSA ranking union: evolve() union, currentGoals");
+        loggerTargets.trace("DynaMOSA ranking union: evolve()");
         MDC.clear();
         this.rankingFunction.computeRankingAssignment(union, this.goalsManager.getCurrentGoals());
 
@@ -107,6 +107,13 @@ public class DynaMOSA extends AbstractMOSA {
 
             // Add the individuals of this front
             this.population.addAll(front);
+            if (index == 0) {
+                for (TestChromosome t : front) {
+                    MDC.put("test", t.toString());
+                    loggerTargets.trace("Population");
+                    MDC.clear();
+                }
+            }
 
             // Decrement remain
             remain = remain - front.size();

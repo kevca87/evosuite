@@ -141,7 +141,7 @@ public class RankBasedPreferenceSorting<T extends Chromosome<T>> implements Rank
             // LoggingUtils.getEvoLogger().info("\nBEST TEST\n" + best + "\nGOAL\n" + f);
             MDC.put("target", f.toString());
             MDC.put("test", best.toString());
-            loggerTargets.trace("");
+            loggerTargets.trace("Best test for goal");
             MDC.clear();
 
 
