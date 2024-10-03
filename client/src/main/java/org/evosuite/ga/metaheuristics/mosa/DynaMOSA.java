@@ -30,6 +30,7 @@ import org.evosuite.testcase.TestFitnessFunction;
 import org.evosuite.utils.LoggingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ public class DynaMOSA extends AbstractMOSA {
     private static final long serialVersionUID = 146182080947267628L;
 
     private static final Logger logger = LoggerFactory.getLogger(DynaMOSA.class);
+    private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
 
     /**
      * Manager to determine the test goals to consider at each generation
@@ -81,6 +83,9 @@ public class DynaMOSA extends AbstractMOSA {
 
         // Ranking the union using the best rank algorithm (modified version of the non dominated
         // sorting algorithm)
+        MDC.put("currentGoals", this.goalsManager.getCurrentGoals().toString());
+        loggerTargets.trace("DynaMOSA ranking union: evolve() union, currentGoals");
+        MDC.clear();
         this.rankingFunction.computeRankingAssignment(union, this.goalsManager.getCurrentGoals());
 
         // let's form the next population using "preference sorting and non-dominated sorting" on the
@@ -162,6 +167,9 @@ public class DynaMOSA extends AbstractMOSA {
         // Calculate dominance ranks and crowding distance. This is required to decide which
         // individuals should be used for mutation and crossover in the first iteration of the main
         // search loop.
+        MDC.put("currentGoals", this.goalsManager.getCurrentGoals().toString());
+        loggerTargets.trace("DynaMOSA first iter distance: generateSolution()");
+        MDC.clear();
         this.rankingFunction.computeRankingAssignment(this.population, this.goalsManager.getCurrentGoals());
         for (int i = 0; i < this.rankingFunction.getNumberOfSubfronts(); i++) {
             this.distance.fastEpsilonDominanceAssignment(this.rankingFunction.getSubfront(i), this.goalsManager.getCurrentGoals());
