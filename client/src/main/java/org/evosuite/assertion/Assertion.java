@@ -266,4 +266,9 @@ public abstract class Assertion implements Serializable {
         killedMutants = new LinkedHashSet<>();
     }
 
+    @Override
+    public String toString() {
+        return getCode();
+    }
+
 }
