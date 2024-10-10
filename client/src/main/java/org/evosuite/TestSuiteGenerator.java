@@ -83,6 +83,8 @@ public class TestSuiteGenerator {
     private static final String FOR_NAME = "forName";
     private static final Logger logger = LoggerFactory.getLogger(TestSuiteGenerator.class);
 
+    private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
+
 
     private void initializeTargetClass() throws Throwable {
         String cp = ClassPathHandler.getInstance().getTargetProjectClasspath();
@@ -488,6 +490,8 @@ public class TestSuiteGenerator {
                 }
             }
         }
+
+        loggerTargets.trace(Boolean.toString(Properties.ASSERTIONS));
 
         if (Properties.ASSERTIONS) {
             LoggingUtils.getEvoLogger().info("* " + ClientProcess.getPrettyPrintIdentifier() + "Generating assertions");
