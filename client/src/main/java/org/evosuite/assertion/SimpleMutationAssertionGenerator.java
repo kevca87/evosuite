@@ -34,6 +34,7 @@ import org.evosuite.testsuite.TestSuiteChromosome;
 import org.evosuite.utils.Randomness;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -42,6 +43,7 @@ import java.util.Map.Entry;
 public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator {
 
     private final static Logger logger = LoggerFactory.getLogger(SimpleMutationAssertionGenerator.class);
+    private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
 
 
     @Override
@@ -115,6 +117,10 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
      */
     private void addAssertions(TestCase test, Set<Integer> killed,
                                Map<Integer, Mutation> mutants) {
+
+        MDC.put("testCaseForAssertion", test.toString());
+        loggerTargets.trace("testCaseForAssertion");
+        MDC.clear();
 
         if (test.isEmpty())
             return;
@@ -227,11 +233,16 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
             }
         }
 
+        loggerTargets.trace("Assertions Before minimize");
+
         List<Assertion> assertions = test.getAssertions();
         logger.info("Got " + assertions.size() + " assertions");
         Map<Integer, Set<Integer>> killMap = new HashMap<>();
         int num = 0;
         for (Assertion assertion : assertions) {
+            MDC.put("assertion", assertion.toString());
+            loggerTargets.trace("Assertion");
+            MDC.clear();
             Set<Integer> killedMutations = new HashSet<>();
             for (Mutation m : executedMutants) {
 
@@ -247,6 +258,9 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
                 if (isKilled) {
                     killedMutations.add(m.getId());
                     assertion.addKilledMutation(m);
+                    MDC.put("mutation", m.toString());
+                    loggerTargets.trace("Mutation");
+                    MDC.clear();
                 }
             }
             killMap.put(num, killedMutations);
@@ -256,11 +270,27 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
 
         int killedBefore = getNumKilledMutants(test, mutationTraces, executedMutants);
 
+        MDC.put("nKilledMutantsBeforeMinimize", Integer.toString(killedBefore));
+        loggerTargets.trace("nKilledMutants");
+        MDC.clear();
+
         logger.debug("Need to kill mutants: " + killedBefore);
         logger.debug(killMap.toString());
         minimize(test, executedMutants, assertions, killMap);
 
         int killedAfter = getNumKilledMutants(test, mutationTraces, executedMutants);
+
+        loggerTargets.trace("Assertions After minimize");
+        List<Assertion> loggerAssertions = test.getAssertions();
+        for (Assertion assertion : loggerAssertions) {
+            MDC.put("assertion", assertion.toString());
+            loggerTargets.trace("Assertion");
+            MDC.clear();
+        }
+
+        MDC.put("nKilledMutantsAfterMinimize", Integer.toString(killedAfter));
+        loggerTargets.trace("nKilledMutantsAfterMinimize");
+        MDC.clear();
 
         int s2 = killed.size() - s1;
         assert (killedBefore == killedAfter) : "Mutants killed before / after / should be: "
