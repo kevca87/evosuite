@@ -139,9 +139,9 @@ public class RankBasedPreferenceSorting<T extends Chromosome<T>> implements Rank
             assert best != null;
 
             // LoggingUtils.getEvoLogger().info("\nBEST TEST\n" + best + "\nGOAL\n" + f);
-            MDC.put("target", f.toString());
+            MDC.put("goal", f.toString());
             MDC.put("test", best.toString());
-            loggerTargets.trace("Best test for goal");
+            loggerTargets.trace("bestTestForGoal");
             MDC.clear();
 
 
