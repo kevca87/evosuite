@@ -92,7 +92,6 @@
 		<append>false</append>
 		<encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
 			<providers>
-				<timestamp />
 				<message />
 				<mdc />
 			</providers>
