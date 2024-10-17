@@ -33,6 +33,7 @@ import org.evosuite.result.TestGenerationResultBuilder;
 import org.evosuite.rmi.ClientServices;
 import org.evosuite.rmi.service.ClientState;
 import org.evosuite.statistics.RuntimeVariable;
+import org.evosuite.testcase.TestCase;
 import org.evosuite.testcase.TestFitnessFunction;
 import org.evosuite.testcase.execution.ExecutionTracer;
 import org.evosuite.testcase.factories.RandomLengthTestFactory;
@@ -40,6 +41,9 @@ import org.evosuite.testsuite.TestSuiteChromosome;
 import org.evosuite.utils.ArrayUtil;
 import org.evosuite.utils.LoggingUtils;
 import org.evosuite.utils.Randomness;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +54,7 @@ import java.util.List;
  * @author Annibale, Fitsum
  */
 public class MOSuiteStrategy extends TestGenerationStrategy {
+    private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
 
     @Override
     public TestSuiteChromosome generateTests() {
@@ -130,6 +135,19 @@ public class MOSuiteStrategy extends TestGenerationStrategy {
             testSuite = algorithm.getBestIndividual();
             if (testSuite.getTestChromosomes().isEmpty()) {
                 LoggingUtils.getEvoLogger().warn(ClientProcess.getPrettyPrintIdentifier() + "Could not generate any test case");
+            }
+            loggerTargets.trace("finalTestSuite");
+            for (TestCase t : testSuite.getTests()) {
+                MDC.put("test", t.toString());
+                loggerTargets.trace("finalTestSuite");
+                MDC.clear();
+                for (TestFitnessFunction goal : t.getCoveredGoals()) {
+                    MDC.put("coveredGoal", goal.toString());
+                    loggerTargets.trace("coveredGoal");
+                    MDC.clear();
+                }
+
+
             }
         } else {
             zeroFitness.setFinished();
