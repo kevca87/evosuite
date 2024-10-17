@@ -114,7 +114,7 @@ public class DynaMOSA extends AbstractMOSA {
             if (index == 0) {
                 for (TestChromosome t : front) {
                     MDC.put("test", t.toString());
-                    loggerTargets.trace("Population");
+                    loggerTargets.trace("populationFront0");
                     MDC.clear();
                 }
             }
@@ -142,6 +142,11 @@ public class DynaMOSA extends AbstractMOSA {
             }
         }
 
+        for (TestChromosome t : this.population) {
+            MDC.put("test", t.toString());
+            loggerTargets.trace("genPopulation");
+            MDC.clear();
+        }
         this.currentIteration++;
         //logger.debug("N. fronts = {}", ranking.getNumberOfSubfronts());
         //logger.debug("1* front size = {}", ranking.getSubfront(0).size());
