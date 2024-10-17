@@ -631,6 +631,8 @@ public class TestSuiteGenerator {
         }
 
         TestGenerationStrategy strategy = TestSuiteGeneratorHelper.getTestGenerationStrategy();
+        loggerTargets.trace("Test generation Strategy");
+        loggerTargets.trace(TestSuiteGeneratorHelper.getTestGenerationStrategy().toString());
         TestSuiteChromosome testSuite = strategy.generateTests();
 
         if (Properties.CHECK_CONTRACTS) {
