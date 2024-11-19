@@ -54,7 +54,7 @@ import java.util.List;
  * @author Annibale, Fitsum
  */
 public class MOSuiteStrategy extends TestGenerationStrategy {
-    private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
+    //private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
 
     @Override
     public TestSuiteChromosome generateTests() {
@@ -136,7 +136,7 @@ public class MOSuiteStrategy extends TestGenerationStrategy {
             if (testSuite.getTestChromosomes().isEmpty()) {
                 LoggingUtils.getEvoLogger().warn(ClientProcess.getPrettyPrintIdentifier() + "Could not generate any test case");
             }
-            loggerTargets.trace("finalTestSuite");
+            /*loggerTargets.trace("finalTestSuite");
             for (TestCase t : testSuite.getTests()) {
                 MDC.put("test", t.toString());
                 loggerTargets.trace("finalTestSuite");
@@ -148,7 +148,7 @@ public class MOSuiteStrategy extends TestGenerationStrategy {
                 }
 
 
-            }
+            }*/
         } else {
             zeroFitness.setFinished();
             testSuite = new TestSuiteChromosome();

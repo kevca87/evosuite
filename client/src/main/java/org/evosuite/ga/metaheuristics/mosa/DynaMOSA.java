@@ -47,7 +47,7 @@ public class DynaMOSA extends AbstractMOSA {
     private static final long serialVersionUID = 146182080947267628L;
 
     private static final Logger logger = LoggerFactory.getLogger(DynaMOSA.class);
-    private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
+    //private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
 
     /**
      * Manager to determine the test goals to consider at each generation
@@ -84,12 +84,12 @@ public class DynaMOSA extends AbstractMOSA {
         // Ranking the union using the best rank algorithm (modified version of the non dominated
         // sorting algorithm)
 
-        loggerTargets.trace("newGeneration");
+        /*loggerTargets.trace("newGeneration");
         for(FitnessFunction f:  this.goalsManager.getCurrentGoals()) {
             MDC.put("currentGoal", f.toString());
             loggerTargets.trace("currentGoal");
             MDC.clear();
-        }
+        }*/
         this.rankingFunction.computeRankingAssignment(union, this.goalsManager.getCurrentGoals());
 
         // let's form the next population using "preference sorting and non-dominated sorting" on the
@@ -111,13 +111,13 @@ public class DynaMOSA extends AbstractMOSA {
 
             // Add the individuals of this front
             this.population.addAll(front);
-            if (index == 0) {
+            /*if (index == 0) {
                 for (TestChromosome t : front) {
                     MDC.put("test", t.toString());
                     loggerTargets.trace("populationFront0");
                     MDC.clear();
                 }
-            }
+            }*/
 
             // Decrement remain
             remain = remain - front.size();
@@ -142,11 +142,11 @@ public class DynaMOSA extends AbstractMOSA {
             }
         }
 
-        for (TestChromosome t : this.population) {
+        /*for (TestChromosome t : this.population) {
             MDC.put("test", t.toString());
             loggerTargets.trace("genPopulation");
             MDC.clear();
-        }
+        }*/
         this.currentIteration++;
         //logger.debug("N. fronts = {}", ranking.getNumberOfSubfronts());
         //logger.debug("1* front size = {}", ranking.getSubfront(0).size());
@@ -183,12 +183,12 @@ public class DynaMOSA extends AbstractMOSA {
         // Calculate dominance ranks and crowding distance. This is required to decide which
         // individuals should be used for mutation and crossover in the first iteration of the main
         // search loop.
-        loggerTargets.trace("newGeneration");
+        /*loggerTargets.trace("newGeneration");
         for(FitnessFunction f:  this.goalsManager.getCurrentGoals()) {
             MDC.put("currentGoal", f.toString());
             loggerTargets.trace("currentGoal");
             MDC.clear();
-        }
+        }*/
 
         this.rankingFunction.computeRankingAssignment(this.population, this.goalsManager.getCurrentGoals());
         for (int i = 0; i < this.rankingFunction.getNumberOfSubfronts(); i++) {

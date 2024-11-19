@@ -43,7 +43,7 @@ import java.util.Map.Entry;
 public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator {
 
     private final static Logger logger = LoggerFactory.getLogger(SimpleMutationAssertionGenerator.class);
-    private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
+    //private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
 
 
     @Override
@@ -270,9 +270,9 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
 
         int killedBefore = getNumKilledMutants(test, mutationTraces, executedMutants);
 
-        MDC.put("nKilledMutantsBeforeMinimize", Integer.toString(killedBefore));
-        loggerTargets.trace("nKilledMutants");
-        MDC.clear();
+        //MDC.put("nKilledMutantsBeforeMinimize", Integer.toString(killedBefore));
+        //loggerTargets.trace("nKilledMutants");
+        //MDC.clear();
 
         logger.debug("Need to kill mutants: " + killedBefore);
         logger.debug(killMap.toString());
@@ -294,9 +294,9 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
             }
         }*/
 
-        MDC.put("nKilledMutantsAfterMinimize", Integer.toString(killedAfter));
-        loggerTargets.trace("nKilledMutantsAfterMinimize");
-        MDC.clear();
+        //MDC.put("nKilledMutantsAfterMinimize", Integer.toString(killedAfter));
+        //loggerTargets.trace("nKilledMutantsAfterMinimize");
+        //MDC.clear();
 
         int s2 = killed.size() - s1;
         assert (killedBefore == killedAfter) : "Mutants killed before / after / should be: "

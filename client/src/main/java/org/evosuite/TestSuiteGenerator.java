@@ -520,7 +520,6 @@ public class TestSuiteGenerator {
             }
         }
 
-        loggerTargets.trace(Boolean.toString(Properties.ASSERTIONS));
 
         if (Properties.ASSERTIONS) {
             LoggingUtils.getEvoLogger().info("* " + ClientProcess.getPrettyPrintIdentifier() + "Generating assertions");

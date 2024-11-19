@@ -63,7 +63,7 @@ public class RankBasedPreferenceSorting<T extends Chromosome<T>> implements Rank
     private static final long serialVersionUID = -6636175563989586394L;
 
     private static final Logger logger = LoggerFactory.getLogger(RankBasedPreferenceSorting.class);
-    private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
+    //private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
 
     /**
      * A list containing all the fronts found during the search.
@@ -139,10 +139,10 @@ public class RankBasedPreferenceSorting<T extends Chromosome<T>> implements Rank
             assert best != null;
 
             // LoggingUtils.getEvoLogger().info("\nBEST TEST\n" + best + "\nGOAL\n" + f);
-            MDC.put("goal", f.toString());
+            /*MDC.put("goal", f.toString());
             MDC.put("test", best.toString());
             loggerTargets.trace("bestTestForGoal");
-            MDC.clear();
+            MDC.clear();*/
 
 
             best.setRank(0);
