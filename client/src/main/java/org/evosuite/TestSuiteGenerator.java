@@ -22,6 +22,7 @@ package org.evosuite;
 import org.evosuite.Properties.AssertionStrategy;
 import org.evosuite.Properties.Criterion;
 import org.evosuite.Properties.TestFactory;
+import org.evosuite.assertion.Assertion;
 import org.evosuite.classpath.ClassPathHacker;
 import org.evosuite.classpath.ClassPathHandler;
 import org.evosuite.contracts.ContractChecker;
@@ -30,6 +31,7 @@ import org.evosuite.coverage.CoverageCriteriaAnalyzer;
 import org.evosuite.coverage.FitnessFunctions;
 import org.evosuite.coverage.TestFitnessFactory;
 import org.evosuite.coverage.dataflow.DefUseCoverageSuiteFitness;
+import org.evosuite.coverage.mutation.Mutation;
 import org.evosuite.ga.metaheuristics.GeneticAlgorithm;
 import org.evosuite.ga.stoppingconditions.StoppingCondition;
 import org.evosuite.junit.JUnitAnalyzer;
@@ -66,6 +68,7 @@ import org.evosuite.utils.LoggingUtils;
 import org.evosuite.utils.generic.GenericMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -226,6 +229,32 @@ public class TestSuiteGenerator {
             result = writeJUnitTestsAndCreateResult(testCases);
             writeJUnitFailingTests();
         }
+
+        // loggerTargets.trace("finalTestSuiteAfterMinimization");
+        for (TestCase t : testCases.getTests()) {
+            MDC.put("test", t.toString());
+            loggerTargets.trace("finalTestSuiteAfterMinimization");
+            MDC.clear();
+            for (TestFitnessFunction goal : t.getCoveredGoals()) {
+                MDC.put("coveredGoalAfterMinimization", goal.toString());
+                loggerTargets.trace("coveredGoalAfterMinimization");
+                MDC.clear();
+            }
+            loggerTargets.trace("assertionsAfterMinimize");
+            List<Assertion> loggerAssertions = t.getAssertions();
+            for (Assertion assertion : loggerAssertions) {
+                MDC.put("assertion", assertion.toString());
+                loggerTargets.trace("assertion");
+                MDC.clear();
+                for(Mutation m: assertion.getKilledMutations()){
+                    MDC.put("mutation", m.toString());
+                    MDC.put("id", Integer.toString(m.getId()));
+                    loggerTargets.trace("mutation");
+                    MDC.clear();
+                }
+            }
+        }
+
         TestCaseExecutor.pullDown();
         /*
          * TODO: when we will have several processes running in parallel, we ll

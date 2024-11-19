@@ -118,9 +118,9 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
     private void addAssertions(TestCase test, Set<Integer> killed,
                                Map<Integer, Mutation> mutants) {
 
-        MDC.put("testCaseForAssertion", test.toString());
-        loggerTargets.trace("testCaseForAssertion");
-        MDC.clear();
+        // MDC.put("testCaseForAssertion", test.toString());
+        // loggerTargets.trace("testCaseForAssertion");
+        // MDC.clear();
 
         if (test.isEmpty())
             return;
@@ -233,16 +233,16 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
             }
         }
 
-        loggerTargets.trace("Assertions Before minimize");
+        // loggerTargets.trace("Assertions Before minimize");
 
         List<Assertion> assertions = test.getAssertions();
         logger.info("Got " + assertions.size() + " assertions");
         Map<Integer, Set<Integer>> killMap = new HashMap<>();
         int num = 0;
         for (Assertion assertion : assertions) {
-            MDC.put("assertion", assertion.toString());
-            loggerTargets.trace("Assertion");
-            MDC.clear();
+            // MDC.put("assertion", assertion.toString());
+            // loggerTargets.trace("Assertion");
+            // MDC.clear();
             Set<Integer> killedMutations = new HashSet<>();
             for (Mutation m : executedMutants) {
 
@@ -258,9 +258,9 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
                 if (isKilled) {
                     killedMutations.add(m.getId());
                     assertion.addKilledMutation(m);
-                    MDC.put("mutation", m.toString());
-                    loggerTargets.trace("Mutation");
-                    MDC.clear();
+                    // MDC.put("mutation", m.toString());
+                    // loggerTargets.trace("mutation");
+                    // MDC.clear();
                 }
             }
             killMap.put(num, killedMutations);
@@ -280,13 +280,19 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
 
         int killedAfter = getNumKilledMutants(test, mutationTraces, executedMutants);
 
-        loggerTargets.trace("Assertions After minimize");
+        /*loggerTargets.trace("assertionsAfterMinimize");
         List<Assertion> loggerAssertions = test.getAssertions();
         for (Assertion assertion : loggerAssertions) {
             MDC.put("assertion", assertion.toString());
-            loggerTargets.trace("Assertion");
+            loggerTargets.trace("assertion");
             MDC.clear();
-        }
+            for(Mutation m: assertion.getKilledMutations()){
+                MDC.put("mutation", m.toString());
+                MDC.put("id", Integer.toString(m.getId()));
+                loggerTargets.trace("mutation");
+                MDC.clear();
+            }
+        }*/
 
         MDC.put("nKilledMutantsAfterMinimize", Integer.toString(killedAfter));
         loggerTargets.trace("nKilledMutantsAfterMinimize");
