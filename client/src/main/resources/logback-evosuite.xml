@@ -88,8 +88,9 @@
 	</appender>
 
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>logs/evosuite_goals.log</file>
-		<append>false</append>
+		<file>logs/evosuite_goals_damn.log</file>
+		<append>true</append>
+		<prudent>true</prudent>
 		<encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
 			<providers>
 				<message />

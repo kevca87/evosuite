@@ -127,11 +127,16 @@ public class TestSuiteGenerator {
      */
     public TestGenerationResult generateTestSuite() {
 
+        MDC.put("targetClass", Properties.TARGET_CLASS);
+        loggerTargets.trace("targetClass");
+        MDC.clear();
+
         LoggingUtils.getEvoLogger().info("* " + ClientProcess.getPrettyPrintIdentifier() + "Analyzing classpath: ");
 
         ClientServices.getInstance().getClientNode().changeState(ClientState.INITIALIZATION);
 
         // Deactivate loop counter to make sure classes initialize properly
+        
         LoopCounter.getInstance().setActive(false);
         ExceptionMapGenerator.initializeExceptionMap(Properties.TARGET_CLASS);
 
@@ -229,7 +234,7 @@ public class TestSuiteGenerator {
             result = writeJUnitTestsAndCreateResult(testCases);
             writeJUnitFailingTests();
         }
-
+        loggerTargets.trace("newLog");
         // loggerTargets.trace("finalTestSuiteAfterMinimization");
         for (TestCase t : testCases.getTests()) {
             MDC.put("test", t.toString());
