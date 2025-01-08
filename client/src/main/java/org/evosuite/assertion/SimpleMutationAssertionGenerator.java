@@ -22,11 +22,13 @@ package org.evosuite.assertion;
 import org.evosuite.Properties;
 import org.evosuite.TimeController;
 import org.evosuite.coverage.mutation.Mutation;
+import org.evosuite.coverage.mutation.MutationTestFitness;
 import org.evosuite.coverage.mutation.MutationTimeoutStoppingCondition;
 import org.evosuite.rmi.ClientServices;
 import org.evosuite.rmi.service.ClientState;
 import org.evosuite.rmi.service.ClientStateInformation;
 import org.evosuite.testcase.TestCase;
+import org.evosuite.testcase.TestFitnessFunction;
 import org.evosuite.testcase.execution.ExecutionResult;
 import org.evosuite.testcase.statements.MethodStatement;
 import org.evosuite.testcase.variable.VariableReference;
@@ -104,7 +106,19 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
      * @param killed a {@link java.util.Set} object.
      */
     private void addAssertions(TestCase test, Set<Integer> killed) {
-        addAssertions(test, killed, mutants);
+
+        Set<TestFitnessFunction> test_covered_goals = test.getCoveredGoals();
+        Map<Integer, Mutation> covered_mutants = new HashMap<>();
+
+        for (TestFitnessFunction goal : test_covered_goals) {
+            if (goal instanceof MutationTestFitness) {
+                MutationTestFitness mutationGoal = (MutationTestFitness) goal;
+                Mutation covered_mutant = mutationGoal.getMutation();
+                covered_mutants.put(covered_mutant.getId(), covered_mutant);
+            }
+        }
+
+        addAssertions(test, killed, covered_mutants);
         filterRedundantNonnullAssertions(test);
     }
 
@@ -267,6 +281,8 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
             //logger.info("Assertion " + num + " kills mutants " + killedMutations);
             num++;
         }
+
+        // POSIBLE: Obtener la lista de mutantes de goals de cada test y quedarme con los assertions que matan esos goals
 
         int killedBefore = getNumKilledMutants(test, mutationTraces, executedMutants);
 
