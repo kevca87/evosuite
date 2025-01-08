@@ -65,6 +65,30 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
         int numTest = 0;
         boolean timeIsShort = false;
 
+
+        // REDISTRIBUCION DE ASSERTS
+        // 1. OBTENER EL SET DE COVERED GOALS DE TODA LA TEST SUITE
+        // 2. DEL SET DE COVERED GOALS DEFINIR UNA LISTA SI HA SIDO MATADO POR ALGUN ASSERT, CADA GOAL TRUE O FALSE
+        // 3.1 ESTRATEGIA SIMPLE: GENERAR ASSERTS TEST POR TEST, SI EL GOAL NO HA SIDO MATADO AUN POR ALGUN ASSERT, ENTONCES CONSERVAR GOAL PARA GENERAR ASSERTS DEL TEST
+        // 3.2 ESTRATEGIA COMPLEJA: OBSERVAR CUANTOS GOALS CUBRE CADA TEST, ORDENAR SEGUN EL QUE CUBRE MENOS GOALS, Y GENERAR ASSERTS PARA CADA TEST SEGUN ORDEN MISMA CONDICION DE 3.1
+
+        Set<MutationTestFitness> suite_covered_mutation_goals = new HashSet<>();
+        for (TestCase test : suite.getTests()) {
+            Set<TestFitnessFunction> test_covered_goals = test.getCoveredGoals();
+            for (TestFitnessFunction goal : test_covered_goals) {
+                if (goal instanceof MutationTestFitness) {
+                    MutationTestFitness mutationGoal = (MutationTestFitness) goal;
+                    suite_covered_mutation_goals.add(mutationGoal);
+                }
+            }
+        }
+
+        Map<Integer, Boolean> mutationGoalWasKilled = new HashMap<>();
+        for (MutationTestFitness covered_mutation_goal : suite_covered_mutation_goals) {
+            Mutation covered_mutant = covered_mutation_goal.getMutation();
+            mutationGoalWasKilled.put(covered_mutant.getId(), false);
+        }
+
         for (TestCase test : suite.getTests()) {
             if (!TimeController.getInstance().isThereStillTimeInThisPhase()) {
                 logger.warn("Reached maximum time to generate assertions, aborting assertion generation");
@@ -85,7 +109,7 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
                 numTest++;
             } else {
                 // Set<Integer> killed = new HashSet<Integer>();
-                addAssertions(test, tkilled);
+                addAssertionsToTest(test, tkilled, mutationGoalWasKilled);
                 //progressMonitor.updateStatus((100 * numTest++) / tests.size());
                 ClientState state = ClientState.ASSERTION_GENERATION;
                 ClientStateInformation information = new ClientStateInformation(state);
@@ -105,8 +129,7 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
      * @param test   a {@link org.evosuite.testcase.TestCase} object.
      * @param killed a {@link java.util.Set} object.
      */
-    private void addAssertions(TestCase test, Set<Integer> killed) {
-
+    private void addAssertionsToTest(TestCase test, Set<Integer> killed , Map<Integer, Boolean> mutationGoalWasKilled) {
         Set<TestFitnessFunction> test_covered_goals = test.getCoveredGoals();
         Map<Integer, Mutation> covered_mutants = new HashMap<>();
 
@@ -114,6 +137,10 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
             if (goal instanceof MutationTestFitness) {
                 MutationTestFitness mutationGoal = (MutationTestFitness) goal;
                 Mutation covered_mutant = mutationGoal.getMutation();
+                if (mutationGoalWasKilled.get(covered_mutant.getId())) {
+                    continue;
+                }
+                mutationGoalWasKilled.put(covered_mutant.getId(), true);
                 covered_mutants.put(covered_mutant.getId(), covered_mutant);
             }
         }
