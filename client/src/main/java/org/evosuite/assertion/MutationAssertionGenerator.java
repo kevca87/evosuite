@@ -42,6 +42,7 @@ import org.evosuite.utils.ArrayUtil;
 import org.evosuite.utils.LoggingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.text.NumberFormat;
 import java.util.*;
@@ -57,6 +58,7 @@ import java.util.*;
 public abstract class MutationAssertionGenerator extends AssertionGenerator {
 
     private final static Logger logger = LoggerFactory.getLogger(MutationAssertionGenerator.class);
+    private static final Logger loggerTargets = LoggerFactory.getLogger("targets");
 
     protected final Map<Integer, Mutation> mutants = new HashMap<>();
 
@@ -211,6 +213,9 @@ public abstract class MutationAssertionGenerator extends AssertionGenerator {
         } else {
             double score = (double) tkilled.size() / (double) MutationPool.getInstance(TestGenerationContext.getInstance().getClassLoaderForSUT()).getMutantCounter();
             // SearchStatistics.getInstance().mutationScore(score);
+            MDC.put("score", Double.toString(score));
+            loggerTargets.trace("mutationScore");
+            MDC.clear();
             ClientServices.getInstance().getClientNode().trackOutputVariable(RuntimeVariable.MutationScore, score);
             LoggingUtils.getEvoLogger().info(
                     "* Resulting test suite's mutation score: " + NumberFormat.getPercentInstance().format(score));

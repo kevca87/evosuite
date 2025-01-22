@@ -117,7 +117,7 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
                 ClientServices.getInstance().getClientNode().changeState(state, information);
             }
         }
-
+        MDC.put("targetClass", Properties.TARGET_CLASS);
         calculateMutationScore(tkilled);
         restoreCriterion(suite);
     }
