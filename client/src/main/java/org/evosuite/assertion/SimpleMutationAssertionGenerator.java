@@ -130,22 +130,18 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
      * @param killed a {@link java.util.Set} object.
      */
     private void addAssertionsToTest(TestCase test, Set<Integer> killed , Map<Integer, Boolean> mutationGoalWasKilled) {
-        Set<TestFitnessFunction> test_covered_goals = test.getCoveredGoals();
-        Map<Integer, Mutation> covered_mutants = new HashMap<>();
+        Map<Integer, Mutation> all_mutants_injected_in_suite = mutants;
+        Map<Integer, Mutation> mutations_to_generate_asserts = new HashMap<>();
 
-        for (TestFitnessFunction goal : test_covered_goals) {
-            if (goal instanceof MutationTestFitness) {
-                MutationTestFitness mutationGoal = (MutationTestFitness) goal;
-                Mutation covered_mutant = mutationGoal.getMutation();
-                if (mutationGoalWasKilled.get(covered_mutant.getId())) {
-                    continue;
-                }
-                mutationGoalWasKilled.put(covered_mutant.getId(), true);
-                covered_mutants.put(covered_mutant.getId(), covered_mutant);
+        for (Mutation mutation : all_mutants_injected_in_suite.values()) {
+            if (mutationGoalWasKilled.get(mutation.getId())) {
+                continue;
             }
+            mutationGoalWasKilled.put(mutation.getId(), false);
+            mutations_to_generate_asserts.put(mutation.getId(), mutation);
         }
 
-        addAssertions(test, killed, covered_mutants);
+        addAssertions(test, killed, mutations_to_generate_asserts);
         filterRedundantNonnullAssertions(test);
     }
 
