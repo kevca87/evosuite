@@ -137,7 +137,7 @@ public class SimpleMutationAssertionGenerator extends MutationAssertionGenerator
             if (mutationGoalWasKilled.get(mutation.getId())) {
                 continue;
             }
-            mutationGoalWasKilled.put(mutation.getId(), false);
+            mutationGoalWasKilled.put(mutation.getId(), true);
             mutations_to_generate_asserts.put(mutation.getId(), mutation);
         }
 
